@@ -3,14 +3,10 @@
 require 'mechanize'
 
 # WebmasterTools
-# Parameters:
-#  required:
-#   :username  -
-#   :password  -
+# required parameters:
 #
-#  optional:
-#   :url -
-#   :security_token -
+#   :username  - google username or email
+#   :password  - password in plaintext
 class WebmasterTools
   LOGIN     = "https://accounts.google.com/ServiceLogin?service=sitemaps"
   AUTH      = "https://accounts.google.com/ServiceLoginAuth"
