@@ -13,11 +13,17 @@ require 'mechanize'
 #   :security_token -
 class WebmasterTools
   LOGIN     = "https://accounts.google.com/ServiceLogin?service=sitemaps"
+  AUTH      = "https://accounts.google.com/ServiceLoginAuth"
   REMOVAL   = "https://www.google.com/webmasters/tools/removals-request?hl=en&siteUrl=%s&urlt=%s"
   INFO      = "https://www.google.com/webmasters/tools/sitemaps-dl?hl=en&siteUrl=%s&security_token=%s"
   DASHBOARD = "https://www.google.com/webmasters/tools/dashboard?hl=en&siteUrl=%s"
   ERRORS    = "https://www.google.com/webmasters/tools/crawl-errors?hl=en&siteUrl=%s"
   STATS     = "https://www.google.com/webmasters/tools/crawl-stats?hl=en&siteUrl=%s"
+  TOKEN     = "https://www.google.com/webmasters/tools/gwt/SITEMAPS_READ"
+  GWT       = "https://www.google.com/webmasters/tools/gwt/"
+  GWT_PERM  = "E3DA43109D05B1A5067480CE25494CC2"
+
+  PAYLOAD   = "7|0|11|%s|3EA173CEE6992CFDEAB5C18469B06594|com.google.crawl.wmconsole.fe.feature.gwt.sitemaps.shared.SitemapsService|getDataForMainPage|com.google.crawl.wmconsole.fe.feature.gwt.common.shared.FeatureContext/2156265033|Z|/webmasters/tools|com.google.crawl.wmconsole.fe.feature.gwt.config.FeatureKey/497977451|en|%s|com.google.crawl.wmconsole.fe.base.PermissionLevel/2330262508|1|2|3|4|3|5|6|6|5|7|8|5|9|10|11|5|1|0|"
 
   def initialize(username, password)
     login(username, password)
@@ -29,18 +35,32 @@ class WebmasterTools
       form.Email  = username
       form.Passwd = password
     end)
+    raise "Wrong username + password combination" if page.content.include?(AUTH)
   end
 
   def dashboard(url)
-    url   = norm_url(url)
+    url   = CGI::escape norm_url(url)
     page  = agent.get(DASHBOARD % url)
-    {
-      :indexed => page.search("#sitemap tbody .rightmost").text.gsub(/\D/, '').to_i
-    }
+    page.search("#sitemap tbody .rightmost").map do |node|
+      { :indexed_web => node.text.gsub(/\D/, '').to_i }
+    end
   end
 
-  def crawl_info(url, token)
-    url   = norm_url(url)
+  def security_token(url)
+    # looks like `crawl_error_counts(url)` contains the security_token as well (if data available)...
+    dashboard(url) # to trigger referer
+    url  = norm_url(url)
+    page = agent.post(TOKEN, PAYLOAD % [GWT, url],  {
+      "X-GWT-Module-Base" => GWT,
+      "X-GWT-Permutation" => GWT_PERM,
+      "Content-Type" => "text/x-gwt-rpc; charset=utf-8",
+    })
+    page.content.scan(/security_token=([^"]+)/).flatten.first
+  end
+
+  def crawl_info(url)
+    token = security_token(url)
+    url   = CGI::escape norm_url(url)
     page  = agent.get(INFO % [url, token])
 
     lines = page.content.split("\n").map do |line|
@@ -54,7 +74,7 @@ class WebmasterTools
   end
 
   def crawl_stats(url)
-    url   = norm_url(url)
+    url   = CGI::escape norm_url(url)
     types = %w(pages kilobytes milliseconds).map(&:to_sym)
     head  = %w(high avg low).map(&:to_sym)
 
@@ -68,7 +88,7 @@ class WebmasterTools
   end
 
   def crawl_error_counts(url)
-    url  = norm_url(url)
+    url  = CGI::escape norm_url(url)
     page = agent.get(ERRORS % url)
 
     page.search(".categories a").inject({}) do |hash, n|
@@ -79,7 +99,7 @@ class WebmasterTools
   end
 
   def remove_url(url, file)
-    url  = norm_url(url)
+    url  = CGI::escape norm_url(url)
     page = agent.get(REMOVAL % [url, url + file])
     page = agent.submit page.form
   end
@@ -91,6 +111,6 @@ class WebmasterTools
 
   def norm_url(url)
     schema, host = url.scan(/^(https?:\/\/)?(.+?)\/?$/).flatten
-    CGI::escape "#{schema || 'http://'}#{host}/"
+    "#{schema || 'http://'}#{host}/"
   end
 end
