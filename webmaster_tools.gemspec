@@ -7,8 +7,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Tobias Bielohlawek"]
   s.email       = ["tobi@soundcloud.com"]
   s.homepage    = "http://github.com/rngtng/webmaster_tools"
-  s.summary     = %q{Gives access to Webmaster Tools Interface data programmatically which is not provided by the official API}
-  s.description = %q{Webmaster Tools extends the official API to give programmatically access to various crawl information and functions which are available via the Interface}
+  s.summary     = %q{Get programmatically access to Webmaster Tools Interface data}
+  s.description = %q{Webmaster Tools extends the official API to give programmatically access to various crawl information and functions which are available via the webinterface}
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")

@@ -1,8 +1,9 @@
-# Webmaster Tools
+# Webmaster Tools  [![](http://travis-ci.org/rngtng/webmaster_tools.png)](http://travis-ci.org/rngtng/webmaster_tools)
 
-* API very limited
-* subset of tools
-* based on mechanize
+Webmaster Tools extends the official API to give programmatically access to various crawl information and functions which are available via the webinterface
+
+The [Google Webmaster Tool API](http://code.google.com/apis/webmastertools/) is very limited and provides only a little subset of data available via the [webinterface](https://www.google.com/webmasters/tools/home?hl=en). By making use of mechanize, Webmaster Tools gives access to crawl_info, crawl_errors, crawl_stats and allows to submit url removal request (up to 1000 per day)
+
 
 ## Usage
 
@@ -17,22 +18,10 @@ pp client.crawl_error_counts(<url>)
 
 ```
 
-## Interface
-
-### crawl
-
-#### info
-#### errors
-#### stats
-
-### other
-
-#### submit removal request
-
 
 ## Dependencies
 
-Depends on [mechanize](http://mechanize.rubyforge.org/) to access the Webinterface
+Depends on [mechanize](http://mechanize.rubyforge.org/) to access the webinterface
 
 
 ## Contributing
