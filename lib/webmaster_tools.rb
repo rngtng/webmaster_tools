@@ -94,10 +94,11 @@ class WebmasterTools
     end
   end
 
-  def remove_url(url, file)
-    url  = CGI::escape norm_url(url)
-    page = agent.get(REMOVAL % [url, url + file])
+  def remove_url(url_with_file)
+    url  = CGI::escape norm_url(url_with_file)
+    page = agent.get(REMOVAL % [url, CGI::escape(url_with_file)])
     page = agent.submit page.form
+    raise "could not submit URL" unless page.search(".wmt-external-url").map(&:text).include?(url_with_file)
   end
 
   private
@@ -106,7 +107,7 @@ class WebmasterTools
   end
 
   def norm_url(url)
-    schema, host = url.scan(/^(https?:\/\/)?(.+?)\/?$/).flatten
+    schema, host, _ = url.scan(/^(https?:\/\/)?(.+?)(\/.*)?$/).flatten
     "#{schema || 'http://'}#{host}/"
   end
 end

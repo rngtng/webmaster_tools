@@ -68,4 +68,20 @@ describe WebmasterTools do
       }
     end
   end
+
+  describe "#remove_url", :vcr do
+    let(:url) { "http://soundcloud-sitemaps.s3-website-us-east-1.amazonaws.com/" }
+
+    it 'removes url' do
+      expect do
+        webmaster_tools.remove_url(url + "test")
+      end.to_not raise_error
+    end
+
+    it 'refuses url and throws error' do
+      expect do
+        webmaster_tools.remove_url("http://wrongurl.com/wrong.html")
+      end.to raise_error
+    end
+  end
 end
