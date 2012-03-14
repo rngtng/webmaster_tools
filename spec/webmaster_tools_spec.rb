@@ -24,19 +24,19 @@ describe WebmasterTools do
     end
   end
 
-  describe "#suggests", :vcr do
-    it 'gets suggests' do
-      webmaster_tools.suggests(url).should  == {:duplicate_meta_descriptions=>11104800, :long_meta_descriptions=>52, :short_meta_descriptions=>22, :missing_title_tags=>2, :duplicate_title_tags=>942215}
+  describe "#suggest_counts", :vcr do
+    it 'gets suggest_counts' do
+      webmaster_tools.suggest_counts(url).should  == {:duplicate_meta_descriptions=>11104800, :long_meta_descriptions=>52, :short_meta_descriptions=>22, :missing_title_tags=>2, :duplicate_title_tags=>942215}
     end
   end
 
   describe "#crawl_error_counts", :vcr do
     it 'gets crawl_error_counts' do
-      webmaster_tools.crawl_error_counts(url).should  == {"Access denied"=>324, "Not found"=>2000, "Other"=>1997, "Server error"=>1039, "Soft 404"=>14}
+      webmaster_tools.crawl_error_counts(url).should  == {:access_denied=>324, :not_found=>2000, :other=>1997, :server_error=>1039, :soft_404=>14}
     end
 
     it 'gets crawl_error_counts splitted' do
-      webmaster_tools.crawl_error_counts(url, true).to_a.last.should  == ["2012-03-12", {"Server error"=>36, "Other"=>1}]
+      webmaster_tools.crawl_error_counts(url, true).to_a.last.should  == ["2012-03-12", {:server_error=>36, :other=>1}]
     end
   end
 

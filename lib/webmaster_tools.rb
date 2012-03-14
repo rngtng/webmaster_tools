@@ -69,7 +69,7 @@ class WebmasterTools
     end)]
   end
 
-  def suggests(url)
+  def suggest_counts(url)
     url  = CGI::escape norm_url(url)
     page = agent.get(SUGGESTS % url)
 
@@ -121,8 +121,8 @@ class WebmasterTools
       detected = "20#{$3}-#{'%02d' % $1.to_i}-#{'%02d' % $2.to_i}" if /(\d{1,2})\/(\d{1,2})\/(\d{2})/ =~ detected
       unless category.to_s.empty?
         sub_hash = split ? (hash[detected] ||= {}) : hash
-        sub_hash[category] ||= 0
-        sub_hash[category]  += 1
+        sub_hash[to_key(category)] ||= 0
+        sub_hash[to_key(category)]  += 1
       end
       hash
     end
@@ -156,13 +156,5 @@ class WebmasterTools
   def to_value(value)
     value.gsub(/\D/, '').to_i
   end
-
-  # def security_token2(url)
-  #   url  = CGI::escape norm_url(url)
-  #   page = agent.get(REMOVAL % [url, url])
-  #   page.form.fields.select do |field|
-  #     field.name == "security_token"
-  #   end.first.value
-  # end
 end
 
