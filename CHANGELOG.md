@@ -5,6 +5,9 @@
   * integrate official API
   * add oauth
 
+## v0.1.4
+  * signature update
+
 ## v0.1.3 - 15-03-2012
   * rename `suggests` to `suggest_counts`
   * symbolize `crawl_errors_count` keys

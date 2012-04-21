@@ -1,4 +1,5 @@
 require "spec_helper"
+# require "debugger"
 
 describe WebmasterTools do
   let(:webmaster_tools) { WebmasterTools.new("sitemap-stats@testscloud.com", "12test34") }
@@ -20,23 +21,23 @@ describe WebmasterTools do
 
   describe "#crawl_stats", :vcr do
     it 'gets crawl_stats' do
-      webmaster_tools.crawl_stats(url).should  == {:pages=>{:high=>2406354, :avg=>1184143, :low=>115279}, :kilobytes=>{:high=>34594873, :avg=>17127849, :low=>1968400}, :milliseconds=>{:high=>564, :avg=>443, :low=>283}}
+      webmaster_tools.crawl_stats(url).should  == {:pages=>{:high=>3273615, :avg=>1902882, :low=>884591}, :kilobytes=>{:high=>48439792, :avg=>27330591, :low=>12862452}, :milliseconds=>{:high=>564, :avg=>437, :low=>283}}
     end
   end
 
   describe "#suggest_counts", :vcr do
     it 'gets suggest_counts' do
-      webmaster_tools.suggest_counts(url).should  == {:duplicate_meta_descriptions=>11104800, :long_meta_descriptions=>52, :short_meta_descriptions=>22, :missing_title_tags=>2, :duplicate_title_tags=>942215}
+      webmaster_tools.suggest_counts(url).should  == {:duplicate_meta_descriptions=>11378053, :short_meta_descriptions=>30, :missing_title_tags=>8, :duplicate_title_tags=>983513}
     end
   end
 
   describe "#crawl_error_counts", :vcr do
     it 'gets crawl_error_counts' do
-      webmaster_tools.crawl_error_counts(url).should  == {:access_denied=>324, :not_found=>2000, :other=>1997, :server_error=>1039, :soft_404=>14}
+      webmaster_tools.crawl_error_counts(url).should  == {:access_denied=>369, :not_found=>1999, :other=>1119, :server_error=>1018, :soft_404=>13}
     end
 
     it 'gets crawl_error_counts splitted' do
-      webmaster_tools.crawl_error_counts(url, true).to_a.last.should  == ["2012-03-12", {:server_error=>36, :other=>1}]
+      webmaster_tools.crawl_error_counts(url, true).to_a.last.should  == ["2012-04-20", {:server_error=>12}]
     end
   end
 
@@ -55,11 +56,11 @@ describe WebmasterTools do
 
     describe "#crawl_info", :vcr do
       it 'gets crawl_info' do
-        webmaster_tools.crawl_info(url).first[:indexed_web].to_i.should == 12497184
+        webmaster_tools.crawl_info(url).first[:indexed_web].to_i.should == 15575423
       end
 
       it 'gets crawl_info' do
-        webmaster_tools.crawl_info(url).last[:indexed_web].to_i.should == 17290270
+        webmaster_tools.crawl_info(url).last[:indexed_web].to_i.should == 19882785
       end
     end
 

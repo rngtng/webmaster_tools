@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
     s.add_runtime_dependency *gem.split(' ')
   end
 
-  %w(rake rspec vcr webmock).each do |gem|
+  %w(rake rspec vcr webmock).each do |gem| #debugger
     s.add_development_dependency *gem.split(' ')
   end
 end

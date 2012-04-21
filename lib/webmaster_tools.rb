@@ -17,17 +17,18 @@ class WebmasterTools
   REMOVAL     = "https://www.google.com/webmasters/tools/removals-request?hl=en&siteUrl=%s&urlt=%s"
 
   GWT_URL     = "https://www.google.com/webmasters/tools/gwt/"
+
   GWT         = {
     :info => {
       :action => "SITEMAPS_READ",
-      :perm => "E3DA43109D05B1A5067480CE25494CC2",
-      :data => "7|0|11|%s|3EA173CEE6992CFDEAB5C18469B06594|com.google.crawl.wmconsole.fe.feature.gwt.sitemaps.shared.SitemapsService|getDataForMainPage|com.google.crawl.wmconsole.fe.feature.gwt.common.shared.FeatureContext/2156265033|Z|/webmasters/tools|com.google.crawl.wmconsole.fe.feature.gwt.config.FeatureKey/497977451|en|%s|com.google.crawl.wmconsole.fe.base.PermissionLevel/2330262508|1|2|3|4|3|5|6|6|5|7|8|5|9|10|11|5|1|0|",
+      :perm => "5424990BD480B81F6BA63DE194F53408",
+      :data => "7|0|11|%s|E2D913257BB297736B95F69D2F54C168|com.google.crawl.wmconsole.fe.feature.gwt.sitemaps.shared.SitemapsService|getDataForMainPage|com.google.crawl.wmconsole.fe.feature.gwt.common.shared.FeatureContext/3741024430|Z|/webmasters/tools|com.google.crawl.wmconsole.fe.feature.gwt.config.FeatureKey/497977451|en|%s|com.google.crawl.wmconsole.fe.base.PermissionLevel/2330262508|1|2|3|4|3|5|6|6|5|7|0|8|5|9|10|11|5|1|1|",
       :dl => "https://www.google.com/webmasters/tools/sitemaps-dl?hl=en&siteUrl=%s&security_token=%s",
     },
     :error => {
       :action => "CRAWLERRORS_READ",
-      :perm => "E3DA43109D05B1A5067480CE25494CC2", #"2367B7971367CA7B851B969834DDB639",
-      :data => "7|0|10|%s|1AC39E92A6D484F754108CEEAACB245D|com.google.crawl.wmconsole.fe.feature.gwt.crawlerrors.shared.CrawlErrorsService|getSiteLevelData|com.google.crawl.wmconsole.fe.feature.gwt.common.shared.FeatureContext/2156265033|/webmasters/tools|com.google.crawl.wmconsole.fe.feature.gwt.config.FeatureKey/497977451|en|%s|com.google.crawl.wmconsole.fe.base.PermissionLevel/2330262508|1|2|3|4|1|5|5|6|7|1|8|9|10|5|",
+      :perm => "5424990BD480B81F6BA63DE194F53408",
+      :data => "7|0|10|%s|30346EBB872BC09D051CA098E35E9BA0|com.google.crawl.wmconsole.fe.feature.gwt.crawlerrors.shared.CrawlErrorsService|getSiteLevelData|com.google.crawl.wmconsole.fe.feature.gwt.common.shared.FeatureContext/3741024430|/webmasters/tools|com.google.crawl.wmconsole.fe.feature.gwt.config.FeatureKey/497977451|en|%s|com.google.crawl.wmconsole.fe.base.PermissionLevel/2330262508|1|2|3|4|1|5|5|6|0|7|1|8|9|10|5|",
       :dl => "https://www.google.com/webmasters/tools/crawl-errors-new-dl?hl=en&siteUrl=%s&security_token=%s",
     }
   }
@@ -119,7 +120,7 @@ class WebmasterTools
     errors = lines.inject({}) do |hash, line|
       url, response_code, _, detected, category = *line
       detected = "20#{$3}-#{'%02d' % $1.to_i}-#{'%02d' % $2.to_i}" if /(\d{1,2})\/(\d{1,2})\/(\d{2})/ =~ detected
-      unless category.to_s.empty?
+      if !category.to_s.empty? && !(category =~ /[\/%]/)
         sub_hash = split ? (hash[detected] ||= {}) : hash
         sub_hash[to_key(category)] ||= 0
         sub_hash[to_key(category)]  += 1
@@ -146,7 +147,9 @@ class WebmasterTools
       "X-GWT-Permutation" => GWT[action][:perm],
       "Content-Type" => "text/x-gwt-rpc; charset=utf-8",
     })
-    page.content.scan(/security_token=([^"]+)/).flatten.first
+    page.content.scan(/security_token=([^"]+)/).flatten.first.tap do |token|
+      raise "Empty security Token" if token.to_s.empty?
+    end
   end
 
   def to_key(key)
