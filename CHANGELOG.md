@@ -5,6 +5,9 @@
   * integrate official API
   * add oauth
 
+## v0.1.5
+  * signature update
+
 ## v0.1.4
   * signature update
 

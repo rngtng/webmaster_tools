@@ -19,17 +19,23 @@ class WebmasterTools
   GWT_URL     = "https://www.google.com/webmasters/tools/gwt/"
 
   GWT         = {
+    # :select => {
+    #   :action => "SITE_SELECTOR",
+    #   :perm   => "3E83D794404733556D909F0916E6641E",
+    #   :data   => '7|0|13|%s|FCC81D20B05EEB177130C930CD8B412E|com.google.crawl.wmconsole.fe.feature.gwt.common.shared.siteselector.SiteSelectorService|getAllSites|com.google.crawl.wmconsole.fe.feature.gwt.base.shared.FeatureContext/101412349|java.lang.String/2004016611|/webmasters/tools|{"currentSiteName":"testscloud-sitemaps.cloudservice-sitemap.hoostings.com","recentSiteUrls":["https://www.google.com/webmasters/tools/sitemap-list?hl=en&siteUrl=http://testscloud.com/","https://www.google.com/webmasters/tools/sitemap-list?hl=en&siteUrl=http://www.testscloud.com/","https://www.google.com/webmasters/tools/sitemap-list?hl=en&siteUrl=http://testscloud-sitemaps.s3.hoostings.com/","https://www.google.com/webmasters/tools/sitemap-list?hl=en&siteUrl=http://m.testscloud.com/","https://www.google.com/webmasters/tools/sitemap-list?hl=en&siteUrl=http://sandbox-testscloud.com/"],"hasMultipleSites":true,"siteFaviconUrl":"//s2.googleusercontent.com/s2/favicons?domain_url=http://testscloud-sitemaps.cloudservice-sitemap.hoostings.com/","recentSiteNames":["testscloud.com","www.testscloud.com","testscloud-sitemaps.s3.hoostings.com","m.testscloud.com","sandbox-testscloud.com"]}|com.google.crawl.wmconsole.fe.feature.gwt.config.FeatureKey/497977451|en|http://testscloud-sitemaps.cloudservice-sitemap.hoostings.com/|com.google.crawl.wmconsole.fe.base.PermissionLevel/2330262508|https://www.google.com/webmasters/tools/sitemap-list?hl=en&siteUrl=http://testscloud-sitemaps.cloudservice-sitemap.hoostings.com/#MAIN_TAB=0&CARD_TAB=-1|1|2|3|4|2|5|6|5|7|8|9|5|10|11|12|5|13|',
+    #   :dl     => "https://www.google.com/webmasters/tools/sitemaps-dl?hl=en&siteUrl=%s&security_token=%s",
+    # },
     :info => {
       :action => "SITEMAPS_READ",
-      :perm => "5424990BD480B81F6BA63DE194F53408",
-      :data => "7|0|11|%s|E2D913257BB297736B95F69D2F54C168|com.google.crawl.wmconsole.fe.feature.gwt.sitemaps.shared.SitemapsService|getDataForMainPage|com.google.crawl.wmconsole.fe.feature.gwt.common.shared.FeatureContext/3741024430|Z|/webmasters/tools|com.google.crawl.wmconsole.fe.feature.gwt.config.FeatureKey/497977451|en|%s|com.google.crawl.wmconsole.fe.base.PermissionLevel/2330262508|1|2|3|4|3|5|6|6|5|7|0|8|5|9|10|11|5|1|1|",
-      :dl => "https://www.google.com/webmasters/tools/sitemaps-dl?hl=en&siteUrl=%s&security_token=%s",
+      :perm   => "3E83D794404733556D909F0916E6641E",
+      :data   => "7|0|11|%s|0DD967D4FC5CC1A0702DC7ECFB48549A|com.google.crawl.wmconsole.fe.feature.gwt.sitemaps.shared.SitemapsService|getDataForMainPage|com.google.crawl.wmconsole.fe.feature.gwt.base.shared.FeatureContext/101412349|Z|/webmasters/tools|com.google.crawl.wmconsole.fe.feature.gwt.config.FeatureKey/497977451|en|%s|com.google.crawl.wmconsole.fe.base.PermissionLevel/2330262508|1|2|3|4|3|5|6|6|5|7|0|8|6|9|10|11|5|1|0|",
+      :dl     => "https://www.google.com/webmasters/tools/sitemaps-dl?hl=en&siteUrl=%s&security_token=%s",
     },
     :error => {
       :action => "CRAWLERRORS_READ",
-      :perm => "5424990BD480B81F6BA63DE194F53408",
-      :data => "7|0|10|%s|30346EBB872BC09D051CA098E35E9BA0|com.google.crawl.wmconsole.fe.feature.gwt.crawlerrors.shared.CrawlErrorsService|getSiteLevelData|com.google.crawl.wmconsole.fe.feature.gwt.common.shared.FeatureContext/3741024430|/webmasters/tools|com.google.crawl.wmconsole.fe.feature.gwt.config.FeatureKey/497977451|en|%s|com.google.crawl.wmconsole.fe.base.PermissionLevel/2330262508|1|2|3|4|1|5|5|6|0|7|1|8|9|10|5|",
-      :dl => "https://www.google.com/webmasters/tools/crawl-errors-new-dl?hl=en&siteUrl=%s&security_token=%s",
+      :perm   => "3E83D794404733556D909F0916E6641E",
+      :data   => "7|0|10|%s|5ED7DB19A1883A7245AB65FD59F043C3|com.google.crawl.wmconsole.fe.feature.gwt.crawlerrors.shared.CrawlErrorsService|getSiteLevelData|com.google.crawl.wmconsole.fe.feature.gwt.base.shared.FeatureContext/101412349|/webmasters/tools|com.google.crawl.wmconsole.fe.feature.gwt.config.FeatureKey/497977451|en|%s|com.google.crawl.wmconsole.fe.base.PermissionLevel/2330262508|1|2|3|4|1|5|5|6|0|7|1|8|9|10|5|",
+      :dl     => "https://www.google.com/webmasters/tools/crawl-errors-new-dl?hl=en&siteUrl=%s&security_token=%s",
     }
   }
 
@@ -147,6 +153,7 @@ class WebmasterTools
       "X-GWT-Permutation" => GWT[action][:perm],
       "Content-Type" => "text/x-gwt-rpc; charset=utf-8",
     })
+    # debugger
     page.content.scan(/security_token=([^"]+)/).flatten.first.tap do |token|
       raise "Empty security Token" if token.to_s.empty?
     end
