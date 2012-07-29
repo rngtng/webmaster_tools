@@ -88,9 +88,12 @@ class WebmasterTools
     end
   end
 
-  def remove_url(url_with_file)
+  # Possible Removal Types are:  ["PAGE", "PAGE_CACHE", "DIRECTORY"]
+  def remove_url(url_with_file, removal_type = "PAGE")
     url   = CGI::escape norm_url(url_with_file)
     page  = agent.get(REMOVAL % [url, CGI::escape(url_with_file)])
+    
+    page.form.field_with(:name => 'removalmethod').value = removal_type
     page  = agent.submit page.form
     files = page.search(".wmt-external-url").map { |n| File.basename(n.text) }
     raise "could not submit URL" unless files.include?(File.basename(url_with_file))

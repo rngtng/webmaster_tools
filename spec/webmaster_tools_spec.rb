@@ -79,6 +79,12 @@ describe WebmasterTools, :vcr do
           webmaster_tools.remove_url(url + "test2.html")
         end.to_not raise_error
       end
+      
+      it 'refuses bad removal_type and throws error' do
+        expect do
+          webmaster_tools.remove_url(url + "test2.html", 'FAKE_TYPE')
+        end.to raise_error
+      end
 
       it 'refuses url and throws error' do
         expect do
