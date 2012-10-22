@@ -35,6 +35,9 @@ We'll check out your contribution if you:
 We'll do our best to help you out with any contribution issues you may have.
 
 
+## Contributers
+[Arthur D'Antonio III](https://github.com/ArthurD)
+
 ## License
 
 The license is included as LICENSE in this directory.
