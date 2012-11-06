@@ -15,6 +15,7 @@ class WebmasterTools
   STATS       = "https://www.google.com/webmasters/tools/crawl-stats?hl=en&siteUrl=%s"
   SUGGESTS    = "https://www.google.com/webmasters/tools/html-suggestions?hl=en&siteUrl=%s"
   REMOVAL     = "https://www.google.com/webmasters/tools/removals-request?hl=en&siteUrl=%s&urlt=%s"
+  REMOVALS     = "https://www.google.com/webmasters/tools/url-removal?hl=en&siteUrl=%s&urlt=%s&rlf=all&grid.r=0&grid.s=%s"
 
   GWT_URL     = "https://www.google.com/webmasters/tools/gwt/"
 
@@ -97,6 +98,31 @@ class WebmasterTools
     page  = agent.submit page.form
     files = page.search(".wmt-external-url").map { |n| File.basename(n.text) }
     raise "could not submit URL" unless files.include?(File.basename(url_with_file))
+  end
+  
+  def removal_stats(url, max_results = 100)
+    url   = CGI::escape norm_url(url)
+    page  = agent.get(REMOVALS % [url, CGI::escape(url), max_results])
+    
+    removals_array = page.search('.grid tr').collect do |row|
+      next if row.at("td[1]").nil?
+
+      url     =    row.search('.wmt-external-url').text.strip
+      status  =    row.at("td[2]").text.strip
+      type    =    row.at("td[3]").text.strip
+      date    =    row.at("td[4]").text.strip
+
+      if status.include?('Removed')
+        status = 'Removed'
+      elsif status.include?('Denied')
+        status = 'Denied'
+      elsif status.include?('Pending')
+        status = 'Pending'
+      end
+
+      {:url => url, :status => status, :type => type, :date => date}
+    end.compact
+    return removals_array
   end
 
   ###########################
