@@ -1,5 +1,4 @@
 require "spec_helper"
-# require "debugger"
 
 describe WebmasterTools, :vcr do
   let(:webmaster_tools) { WebmasterTools.new("sitemap-stats@testscloud.com", "12test34") }
@@ -21,23 +20,23 @@ describe WebmasterTools, :vcr do
 
   describe "#crawl_stats" do
     it 'gets crawl_stats' do
-      webmaster_tools.crawl_stats(url).should  == {:pages=>{:high=>3749227, :avg=>2011501, :low=>526983}, :kilobytes=>{:high=>56952037, :avg=>29845029, :low=>9783669}, :milliseconds=>{:high=>655, :avg=>424, :low=>254}}
+      webmaster_tools.crawl_stats(url).should  == {:pages=>{:high=>5038900, :avg=>3386448, :low=>494344}, :kilobytes=>{:high=>81386858, :avg=>54885196, :low=>7540876}, :milliseconds=>{:high=>614, :avg=>454, :low=>385}}
     end
   end
 
   describe "#suggest_counts" do
     it 'gets suggest_counts' do
-      webmaster_tools.suggest_counts(url).should  == {:duplicate_meta_descriptions=>8167515, :short_meta_descriptions=>3, :missing_title_tags=>3, :duplicate_title_tags=>981649}
+      webmaster_tools.suggest_counts(url).should  == {:duplicate_meta_descriptions=>7890246, :short_meta_descriptions=>1, :missing_title_tags=>3, :duplicate_title_tags=>786694}
     end
   end
 
   describe "#crawl_error_counts" do
     it 'gets crawl_error_counts' do
-      webmaster_tools.crawl_error_counts(url).should  == {:access_denied=>311, :not_found=>2000, :other=>592, :server_error=>1011, :soft_404=>1}
+      webmaster_tools.crawl_error_counts(url).should  == {:"400"=>11, :access_denied=>1000, :not_followed=>12, :not_found=>2000, :other=>953, :server_error=>1042, :soft_404=>375}
     end
 
     it 'gets crawl_error_counts splitted' do
-      webmaster_tools.crawl_error_counts(url, true).to_a.last.should  == ["2012-05-31", {:not_found=>3}]
+      webmaster_tools.crawl_error_counts(url, true).to_a.last.should  == ["2013-01-06", {:not_found=>2, :access_denied=>3, :other=>1}]
     end
   end
 
@@ -65,11 +64,11 @@ describe WebmasterTools, :vcr do
 
     describe "#crawl_info" do
       it 'gets crawl_info' do
-        webmaster_tools.crawl_info(url).first[:indexed_web].to_i.should == 17182421
+        webmaster_tools.crawl_info(url).first[:indexed_web].to_i.should == 31556508
       end
 
       it 'gets crawl_info' do
-        webmaster_tools.crawl_info(url).last[:indexed_web].to_i.should == 21833811
+        webmaster_tools.crawl_info(url).last[:indexed_web].to_i.should == 31850352
       end
     end
 
@@ -79,7 +78,7 @@ describe WebmasterTools, :vcr do
           webmaster_tools.remove_url(url + "test2.html")
         end.to_not raise_error
       end
-      
+
       it 'refuses bad removal_type and throws error' do
         expect do
           webmaster_tools.remove_url(url + "test2.html", 'FAKE_TYPE')

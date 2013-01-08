@@ -93,17 +93,17 @@ class WebmasterTools
   def remove_url(url_with_file, removal_type = "PAGE")
     url   = CGI::escape norm_url(url_with_file)
     page  = agent.get(REMOVAL % [url, CGI::escape(url_with_file)])
-    
+
     page.form.field_with(:name => 'removalmethod').value = removal_type
     page  = agent.submit page.form
     files = page.search(".wmt-external-url").map { |n| File.basename(n.text) }
     raise "could not submit URL" unless files.include?(File.basename(url_with_file))
   end
-  
+
   def removal_stats(url, max_results = 100)
     url   = CGI::escape norm_url(url)
     page  = agent.get(REMOVALS % [url, CGI::escape(url), max_results])
-    
+
     removals_array = page.search('.grid tr').collect do |row|
       next if row.at("td[1]").nil?
 
@@ -183,7 +183,7 @@ class WebmasterTools
       "Content-Type" => "text/x-gwt-rpc; charset=utf-8",
     })
     # debugger
-    page.content.scan(/security_token=([^"]+)/).flatten.first.tap do |token|
+    page.content.scan(/security_token\\x3D([^"]+)/).flatten.first.tap do |token|
       raise "Empty security Token" if token.to_s.empty?
     end
   end
