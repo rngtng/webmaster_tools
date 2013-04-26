@@ -108,9 +108,9 @@ class WebmasterTools
       next if row.at("td[1]").nil?
 
       url     =    row.search('.wmt-external-url').text.strip
-      status  =    row.at("td[2]").text.strip
-      type    =    row.at("td[3]").text.strip
-      date    =    row.at("td[4]").text.strip
+      status  =    row.search(".removal-status").text.strip.split(' ')[0]
+      type    =    row.search('td')[2].text.strip
+      date    =    row.search('td')[3].text.strip
 
       if status.include?('Removed')
         status = 'Removed'
@@ -118,6 +118,8 @@ class WebmasterTools
         status = 'Denied'
       elsif status.include?('Pending')
         status = 'Pending'
+      else
+        status = 'Unknown'
       end
 
       {:url => url, :status => status, :type => type, :date => date}
